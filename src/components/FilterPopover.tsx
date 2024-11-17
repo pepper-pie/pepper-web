@@ -116,6 +116,7 @@ const FilterSortPopover = <T extends Record<string, any>>({
                         Filter:
                     </Typography>
                     <InputBase
+                        autoFocus
                         placeholder="Search..."
                         value={searchText}
                         onChange={(e) => setSearchText(e.target.value)}

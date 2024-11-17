@@ -42,29 +42,26 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
           Header: "Debit Amount",
           accessor: "debit_amount", // Replace with the correct field name
           Cell: ({ value }) => {
-            const formattedAmount = new Intl.NumberFormat("en-IN", {
-              style: "currency",
-              currency: "INR",
-            }).format(value || 0);
-            return <div style={{ textAlign: "right" }}>{formattedAmount}</div>;
+            return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
           },
         },
         {
           Header: "Credit Amount",
           accessor: "credit_amount", // Replace with the correct field name
           Cell: ({ value }) => {
-            const formattedAmount = new Intl.NumberFormat("en-IN", {
-              style: "currency",
-              currency: "INR",
-            }).format(value || 0);
-            return <div style={{ textAlign: "right" }}>{formattedAmount}</div>;
+            return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
           },
         },
         { Header: "Category", accessor: "category" },
         { Header: "Sub Category", accessor: "sub_category" },
         { Header: "Personal Account", accessor: "personal_account" },
         { Header: "Nominal Account", accessor: "nominal_account" },
-        { Header: "Running Balance", accessor: "running_balance" },
+        {
+          Header: "Running Balance", accessor: "running_balance",
+          Cell: ({ value }) => {
+            return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
+          },
+        },
       ]
       return cols
     },
@@ -86,3 +83,11 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
 };
 
 export default TransactionsTable;
+
+const formatMoney = (value: number) => {
+  const formattedAmount = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+  }).format(value || 0);
+  return formattedAmount
+}
