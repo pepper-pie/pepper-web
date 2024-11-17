@@ -176,13 +176,14 @@ const StyledTableContainer = styled(TableContainer)<TableContainerProps>(({ them
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
   backgroundColor: "#4472C4",
   fontSize: "11px",
+  lineHeight: 1.43,
   "& th": {
     color: "#ffffff",
     fontWeight: "bold",
     textAlign: "left",
     padding: theme.spacing(0.5),
-    borderTop: "2px solid black",
-    borderBottom: "2px solid black",
+    borderTop: "1px solid black",
+    borderBottom: "1px solid black",
     position: "sticky",
     top: 0, // Sticky only for the header
     backgroundColor: "#4472C4",
@@ -193,8 +194,8 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   borderTop: "1px solid #4472C4", // Black border for all cells
   borderBottom: "1px solid #4472C4", // Black border for all cells
-  borderLeft: "1px solid black", // Black border for all cells
-  borderRight: "1px solid black", // Black border for all cells
+  borderLeft: "1px solid #D4D4D4", // Black border for all cells
+  borderRight: "1px solid #D4D4D4", // Black border for all cells
   padding: theme.spacing(0.5), // Reduced padding for denser cells
   fontSize: "12px", // Slightly smaller font size
   whiteSpace: "nowrap", // Prevent text wrapping
