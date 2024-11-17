@@ -195,7 +195,6 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 	return (
 		<Box
 			sx={{
-				margin: 2,
 				height: "calc(100vh - 194px)", // Full page height
 				display: "flex",
 				flexDirection: "column",

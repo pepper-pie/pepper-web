@@ -84,7 +84,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
 
 export default TransactionsTable;
 
-const formatMoney = (value: number) => {
+export const formatMoney = (value: number) => {
   const formattedAmount = new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",

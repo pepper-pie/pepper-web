@@ -4,9 +4,13 @@ import Box from '@mui/material/Box';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { useSearchParams } from 'react-router-dom';
+import { Button, ButtonGroup } from '@mui/material';
 import TransactionsTable from '../features/TransactionTable';
+import AccountSummaryTable from '../features/AccountSummaryTable';
+import ExpenseSummaryTable from '../features/ExpenseSummaryTable';
+import ExpensePivotTable from '../features/ExpensePivotTable';
 
-// Define styled components using MUI's `styled` API
+// Styled components
 const RootLayoutContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -44,7 +48,7 @@ const Content = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
 }));
 
-const RootLayout: FC = (props) => {
+const RootLayout: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Get current month and year
@@ -55,51 +59,85 @@ const RootLayout: FC = (props) => {
   // Extract filters from URL or use defaults
   const selectedMonth = parseInt(searchParams.get('month') || `${defaultMonth}`, 10);
   const selectedYear = parseInt(searchParams.get('year') || `${defaultYear}`, 10);
+  const selectedTab = searchParams.get('tab') || 'reports';
 
   // Handle filter changes
   const handleMonthChange = (event: SelectChangeEvent<number>) => {
-    setSearchParams({ month: `${event.target.value}`, year: `${selectedYear}` });
+    setSearchParams({ month: `${event.target.value}`, year: `${selectedYear}`, tab: selectedTab });
   };
 
   const handleYearChange = (event: SelectChangeEvent<number>) => {
-    setSearchParams({ month: `${selectedMonth}`, year: `${event.target.value}` });
+    setSearchParams({ month: `${selectedMonth}`, year: `${event.target.value}`, tab: selectedTab });
+  };
+
+  const handleTabChange = (tab: string) => {
+    setSearchParams({ month: `${selectedMonth}`, year: `${selectedYear}`, tab });
   };
 
   return (
     <RootLayoutContainer>
       <Header>
         <span>Transaction Viewer</span>
-        <Filters>
-          <Select
-            value={selectedMonth}
-            onChange={handleMonthChange}
-            variant="outlined"
-            size="small"
-            style={{ color: 'white', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-          >
-            {Array.from({ length: 12 }, (_, i) => (
-              <MenuItem key={i + 1} value={i + 1}>
-                {new Date(0, i).toLocaleString('default', { month: 'long' })}
-              </MenuItem>
-            ))}
-          </Select>
-          <Select
-            value={selectedYear}
-            onChange={handleYearChange}
-            variant="outlined"
-            size="small"
-            style={{ color: 'white', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-          >
-            {Array.from({ length: 5 }, (_, i) => (
-              <MenuItem key={i} value={defaultYear - i}>
-                {defaultYear - i}
-              </MenuItem>
-            ))}
-          </Select>
-        </Filters>
-          </Header>
+        <Box display="flex" alignItems="center" gap={2}>
+          <Filters>
+            <Select
+              value={selectedMonth}
+              onChange={handleMonthChange}
+              variant="outlined"
+              size="small"
+              sx={{ color: 'white', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+            >
+              {Array.from({ length: 12 }, (_, i) => (
+                <MenuItem key={i + 1} value={i + 1}>
+                  {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                </MenuItem>
+              ))}
+            </Select>
+            <Select
+              value={selectedYear}
+              onChange={handleYearChange}
+              variant="outlined"
+              size="small"
+              sx={{ color: 'white', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+            >
+              {Array.from({ length: 5 }, (_, i) => (
+                <MenuItem key={i} value={defaultYear - i}>
+                  {defaultYear - i}
+                </MenuItem>
+              ))}
+            </Select>
+          </Filters>
+        </Box>
+      </Header>
       <Content>
-        <TransactionsTable month={selectedMonth} year={selectedYear} />
+        <ButtonGroup>
+          <Button
+            variant={selectedTab === 'reports' ? 'contained' : 'outlined'}
+            color='primary'
+            onClick={() => handleTabChange('reports')}
+          >
+            Reports
+          </Button>
+          <Button
+            variant={selectedTab === 'transactions' ? 'contained' : 'outlined'}
+            color='primary'
+            onClick={() => handleTabChange('transactions')}
+          >
+            Transactions
+          </Button>
+        </ButtonGroup>
+        {/* Render content based on the selected tab */}
+        {selectedTab === 'reports' ? (
+          <Box display={'flex'} >
+            <AccountSummaryTable month={selectedMonth} year={selectedYear} />
+            <Box>
+              <ExpenseSummaryTable month={selectedMonth} year={selectedYear} />
+              <ExpensePivotTable month={selectedMonth} year={selectedYear} />
+            </Box>
+          </Box>
+        ) : (
+            <TransactionsTable month={selectedMonth} year={selectedYear} />
+        )}
       </Content>
     </RootLayoutContainer>
   );
