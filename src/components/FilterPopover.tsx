@@ -10,8 +10,15 @@ export interface FilterSortPopoverProps<T extends Record<string, any>> {
     data: T[]; // The table data
     anchorEl: HTMLElement | null; // The anchor element for the popover
     onClose: () => void; // Callback to close the popover
-    onFilter: (filters: T[]) => void; // Callback to apply filters
+    onFilter: (filters: Record<string, string[]>) => void; // Callback to apply filters
     onSort: (order: "asc" | "desc") => void; // Callback to apply sorting
+
+    selectedFilters: Record<string, string[]>;
+    setSelectedFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
+
+    sortOrder: "asc" | "desc" | null
+    setSortOrder: React.Dispatch<React.SetStateAction<"asc" | "desc" | null>>;
+
 }
 
 const FilterSortPopover = <T extends Record<string, any>>({
@@ -21,9 +28,16 @@ const FilterSortPopover = <T extends Record<string, any>>({
     onClose,
     onFilter,
     onSort,
+
+    selectedFilters,
+    setSelectedFilters,
+
+    sortOrder,
+    setSortOrder
+
+
 }: FilterSortPopoverProps<T>) => {
-    const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
-    const [selectedFilters, setSelectedFilters] = useState<T[]>([]);
+
     const [searchText, setSearchText] = useState<string>("");
 
     // Extract unique values for the column
@@ -37,9 +51,12 @@ const FilterSortPopover = <T extends Record<string, any>>({
     }, [data, columnId, searchText]);
 
     const applyFilter = () => {
+        console.log({ selectedFilters })
         onFilter(selectedFilters);
         onClose();
     };
+
+    const currentColFilters = selectedFilters[columnId] || []
 
     return (
         <Popover
@@ -118,12 +135,12 @@ const FilterSortPopover = <T extends Record<string, any>>({
                     control={
                         <Checkbox
                             size="small"
-                            checked={selectedFilters.length === uniqueValues.length}
+                            checked={currentColFilters.length === uniqueValues.length}
                             onChange={(e) => {
                                 if (e.target.checked) {
-                                    setSelectedFilters(uniqueValues);
+                                    setSelectedFilters({ ...selectedFilters, [columnId]: uniqueValues });
                                 } else {
-                                    setSelectedFilters([]);
+                                    setSelectedFilters({ ...selectedFilters, [columnId]: [] });
                                 }
                             }}
                         />
@@ -145,12 +162,12 @@ const FilterSortPopover = <T extends Record<string, any>>({
                             control={
                                 <Checkbox
                                     size="small"
-                                    checked={selectedFilters.includes(value)}
+                                    checked={currentColFilters.includes(value)}
                                     onChange={(e) => {
                                         const newFilters = e.target.checked
-                                            ? [...selectedFilters, value]
-                                            : selectedFilters.filter((v) => v !== value);
-                                        setSelectedFilters(newFilters);
+                                            ? [...currentColFilters, value]
+                                            : currentColFilters?.filter((v) => v !== value);
+                                        setSelectedFilters({ ...selectedFilters, [columnId]: newFilters });
                                     }}
                                 />
                             }

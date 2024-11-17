@@ -6,6 +6,7 @@ import {
 	useResizeColumns,
 	Column,
 	TableInstance,
+	FilterType
 } from "react-table";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -16,7 +17,6 @@ import TableContainer, { TableContainerProps } from "@mui/material/TableContaine
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Input from "@mui/material/Input";
 import FilterSortPopover from "./FilterPopover";
 
 
@@ -30,6 +30,9 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 	const resizingLineRef = useRef<HTMLDivElement | null>(null); // Resizing guide
 	const resizingColIndexRef = useRef<number | null>(null); // Track resizing column
 	const startXRef = useRef<number>(0); // Mouse starting position
+
+	const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
+	const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({});
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
@@ -45,10 +48,11 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 		setSelectedColumn(null);
 	};
 
-	const applyFilter = (columnId: string, filters: T[]) => {
+	const applyFilter = (columnId: string, filters: Record<string, string[]>) => {
 		const column = tableInstance.columns.find((col) => col.id === columnId);
+		if (!filters[columnId]) return
 		if (column) {
-			const filterValue = filters.length > 0 ? filters : undefined; // Apply filter or clear it
+			const filterValue = filters[columnId].length > 0 ? filters[columnId] : undefined; // Apply filter or clear it
 			tableInstance.setFilter(columnId, filterValue); // Use React Table's `setFilter` method
 			console.log(`Filter applied on column ${columnId}:`, filters);
 		}
@@ -57,7 +61,7 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 	const applySort = (columnId: string, order: "asc" | "desc") => {
 		const column = tableInstance.columns.find((col) => col.id === columnId);
 		if (column) {
-			tableInstance.toggleSortBy(columnId, order === "asc"); // Use React Table's `toggleSortBy` method
+			tableInstance.toggleSortBy(columnId, order === "desc"); // Use React Table's `toggleSortBy` method
 			console.log(`Sorting applied on column ${columnId}: ${order}`);
 		}
 	};
@@ -153,18 +157,27 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 		};
 	}, []);
 
-	const defaultColumn = useMemo(
+	const defaultColumn: Partial<Column<T>> = useMemo(
 		() => ({
 	// Set up the default Filter UI
 			minWidth: 50, // Default minimum column width
 			width: 150, // Default column width
 			maxWidth: 800, // Default maximum column width
+			Filter: () => null,
+			filter: "multiValueIncludes"
 		}),
 		[]
 	);
 
 	const tableInstance: TableInstance<T> = useTable<T>(
-		{ columns, data, defaultColumn },
+		{
+			columns,
+			data,
+			defaultColumn,
+			filterTypes: {
+				multiValueIncludes
+			},
+		},
 		useFilters,
 		useSortBy,
 		useResizeColumns // Enables resizable columns
@@ -199,7 +212,7 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 					{/* Header */}
 					<StyledTableHead>
 						{headerGroups.map((headerGroup, i) => (
-							<TableRow {...headerGroup.getHeaderGroupProps()}>
+							<TableRow {...headerGroup.getHeaderGroupProps()} key={i} >
 								{headerGroup.headers.map((column, colIndex) => (
 									<StyledTableCell
 										// {...column.getHeaderProps(column.getSortByToggleProps())}
@@ -208,6 +221,7 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 											minWidth: column.minWidth,
 											maxWidth: column.maxWidth,
 										}}
+										key={colIndex}
 									>
 										<div
 											style={{
@@ -247,10 +261,11 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 						{rows.map((row, i) => {
 							prepareRow(row);
 							return (
-								<TableRow {...row.getRowProps()} >
-									{row.cells.map((cell) => (
+								<TableRow {...row.getRowProps()} key={i} >
+									{row.cells.map((cell, i) => (
 										<StyledTableCell
 											{...cell.getCellProps()}
+											key={i}
 											style={{
 												width: cell.column.width, // Sync column widths
 												textOverflow: "ellipsis",
@@ -274,6 +289,10 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 					onClose={handleFilterClose}
 					onFilter={(filters) => applyFilter(selectedColumn, filters)}
 					onSort={(order) => applySort(selectedColumn, order)}
+					sortOrder={sortOrder}
+					setSortOrder={setSortOrder}
+					selectedFilters={selectedFilters}
+					setSelectedFilters={setSelectedFilters}
 				/>
 			)}
 		</Box>
@@ -372,4 +391,19 @@ const resizeAllColumns = () => {
 			}
 		});
 	});
+};
+
+// Custom filter function for multi-value includes
+export const multiValueIncludes: FilterType<any> = <T extends Record<string, any>>(
+	rows: T[],
+	columnIds: string[],
+	filterValue: T[]
+) => {
+	if (!filterValue || filterValue.length === 0) {
+		return rows; // No filter applied, return all rows
+	}
+
+	return rows.filter((row) =>
+		filterValue.some((value) => row.values[columnIds[0]] === value)
+	);
 };
