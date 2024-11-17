@@ -31,7 +31,7 @@ function ExcelTable<T extends object>({ columns, data }: ExcelTableProps<T>) {
       Filter: TextFilter,
       minWidth: 50, // Default minimum column width
       width: 150, // Default column width
-      maxWidth: 400, // Default maximum column width
+      maxWidth: 800, // Default maximum column width
     }),
     []
   );
@@ -50,6 +50,7 @@ function ExcelTable<T extends object>({ columns, data }: ExcelTableProps<T>) {
     rows,
     prepareRow,
   } = tableInstance;
+
 
   return (
     <Box
@@ -197,7 +198,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   borderLeft: "1px solid #D4D4D4", // Black border for all cells
   borderRight: "1px solid #D4D4D4", // Black border for all cells
   padding: theme.spacing(0.5), // Reduced padding for denser cells
-  fontSize: "12px", // Slightly smaller font size
+  fontWeight: 500,
+  color: 'black',
+  fontSize: "13px", // Slightly smaller font size
   whiteSpace: "nowrap", // Prevent text wrapping
   overflow: "hidden", // Hide overflowed text
   textOverflow: "ellipsis", // Add ellipsis for overflowed text
@@ -208,3 +211,38 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: "#ffffff", // White background to prevent overlap
   },
 }))
+
+
+
+const resizeAllColumns = () => {
+  const table = document.querySelector("table");
+  if (!table) return;
+
+  const headerCells = table.querySelectorAll<HTMLElement>("thead th");
+  const bodyRows = table.querySelectorAll<HTMLTableRowElement>("tbody tr");
+
+  headerCells.forEach((headerCell, colIndex) => {
+    let maxWidth = headerCell.offsetWidth;
+
+    bodyRows.forEach((row) => {
+      const cell = row.cells[colIndex];
+      if (cell) {
+        maxWidth = Math.max(maxWidth, cell.offsetWidth);
+      }
+    });
+
+    // Set the column width
+    headerCell.style.width = `${maxWidth}px`;
+    headerCell.style.minWidth = `${maxWidth}px`;
+    headerCell.style.maxWidth = `${maxWidth}px`;
+
+    bodyRows.forEach((row) => {
+      const cell = row.cells[colIndex];
+      if (cell) {
+        cell.style.width = `${cell.offsetWidth}px`;
+        cell.style.minWidth = `${maxWidth}px`;
+        cell.style.maxWidth = `${maxWidth}px`;
+      }
+    });
+  });
+};
