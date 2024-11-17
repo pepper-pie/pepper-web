@@ -94,9 +94,9 @@ function ExcelTable<T extends object>({ columns, data }: ExcelTableProps<T>) {
                         style={{
                           cursor: "col-resize", // Indicates resizing
                           display: "inline-block",
-                          width: "5px", // Add some width for grabbing
+                          width: "4px", // Add some width for grabbing
                           height: "100%", // Full height for better usability
-                          backgroundColor: "#ccc", // Optional: distinguish the resizer
+                          // backgroundColor: "#ccc", // Optional: distinguish the resizer
                           position: "absolute", // To separate resizer from cell content
                           right: 0, // Stick to the right edge of the column
                           top: 0,
