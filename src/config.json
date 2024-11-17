@@ -1,0 +1,9 @@
+{
+    "BASE_URL": "http://localhost/",
+    "API_URL": "http://localhost:8000/api/",
+    "IMAGE_KIT_BASE_URL": "",
+    "IMAGE_KIT_URL_PATH": "",
+    "CONSOLE_LOGGING": true,
+    "POST_LOGIN_REDIRECT": "",
+    "UNAUTHENTICATED_REDIRECT": "/"
+}
