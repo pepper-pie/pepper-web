@@ -5,25 +5,25 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { Box, Divider, Typography, InputBase } from "@mui/material";
 import React, { useState, useMemo } from "react";
 
-export interface FilterSortPopoverProps {
+export interface FilterSortPopoverProps<T extends Record<string, any>> {
     columnId: string; // The ID of the column
-    data: any[]; // The table data
+    data: T[]; // The table data
     anchorEl: HTMLElement | null; // The anchor element for the popover
     onClose: () => void; // Callback to close the popover
-    onFilter: (filters: string[]) => void; // Callback to apply filters
+    onFilter: (filters: T[]) => void; // Callback to apply filters
     onSort: (order: "asc" | "desc") => void; // Callback to apply sorting
 }
 
-const FilterSortPopover: React.FC<FilterSortPopoverProps> = ({
+const FilterSortPopover = <T extends Record<string, any>>({
     columnId,
     data,
     anchorEl,
     onClose,
     onFilter,
     onSort,
-}) => {
+}: FilterSortPopoverProps<T>) => {
     const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
-    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+    const [selectedFilters, setSelectedFilters] = useState<T[]>([]);
     const [searchText, setSearchText] = useState<string>("");
 
     // Extract unique values for the column

@@ -20,12 +20,12 @@ import Input from "@mui/material/Input";
 import FilterSortPopover from "./FilterPopover";
 
 
-interface ExcelTableProps<T extends object> {
+interface ExcelTableProps<T extends Record<string, any>> {
 	columns: Column<T>[]; // Columns definition
 	data: T[]; // Data to render
 }
 
-function ExcelTable<T extends object>({ columns, data }: ExcelTableProps<T>) {
+function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTableProps<T>) {
 
 	const resizingLineRef = useRef<HTMLDivElement | null>(null); // Resizing guide
 	const resizingColIndexRef = useRef<number | null>(null); // Track resizing column
@@ -45,14 +45,21 @@ function ExcelTable<T extends object>({ columns, data }: ExcelTableProps<T>) {
 		setSelectedColumn(null);
 	};
 
-	const applyFilter = (columnId: string, filters: string[]) => {
-		// Implement filtering logic here (e.g., update state or React Table instance)
-		console.log(`Filters applied on column ${columnId}:`, filters);
+	const applyFilter = (columnId: string, filters: T[]) => {
+		const column = tableInstance.columns.find((col) => col.id === columnId);
+		if (column) {
+			const filterValue = filters.length > 0 ? filters : undefined; // Apply filter or clear it
+			tableInstance.setFilter(columnId, filterValue); // Use React Table's `setFilter` method
+			console.log(`Filter applied on column ${columnId}:`, filters);
+		}
 	};
 
 	const applySort = (columnId: string, order: "asc" | "desc") => {
-		// Implement sorting logic here (e.g., update state or React Table instance)
-		console.log(`Sorting applied on column ${columnId}: ${order}`);
+		const column = tableInstance.columns.find((col) => col.id === columnId);
+		if (column) {
+			tableInstance.toggleSortBy(columnId, order === "asc"); // Use React Table's `toggleSortBy` method
+			console.log(`Sorting applied on column ${columnId}: ${order}`);
+		}
 	};
 
 	// Initialize the resizing line
