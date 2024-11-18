@@ -193,13 +193,7 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 
 
 	return (
-		<Box
-			sx={{
-				height: "calc(100vh - 194px)", // Full page height
-				display: "flex",
-				flexDirection: "column",
-			}}
-		>
+		<>
 			<StyledTableContainer component={Paper}>
 				<Table
 					{...getTableProps()}
@@ -294,7 +288,7 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 					setSelectedFilters={setSelectedFilters}
 				/>
 			)}
-		</Box>
+		</>
 	);
 }
 

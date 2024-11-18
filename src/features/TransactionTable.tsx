@@ -5,6 +5,7 @@ import { Column } from "react-table";
 import ExcelTable from "../components/ExcelTable";
 import TransactionModel from "../models/transactions/transaction-model";
 import { Transaction } from "../models/transactions/transaction-types";
+import { Box } from "@mui/material";
 
 interface TransactionsTableProps {
   month: number;
@@ -76,7 +77,13 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
     <div>
           <h1>Transactions</h1>
       <ErrorBoundary fallback={<div>Something went wrong</div>} >
+        <Box sx={{
+          height: "calc(100vh - 194px)", // Full page height
+          display: "flex",
+          flexDirection: "column",
+        }} >
         <ExcelTable columns={columns} data={transactions || []} />
+        </Box>
       </ErrorBoundary>
     </div>
   );

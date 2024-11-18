@@ -64,7 +64,7 @@ const ExpensePivotTable: React.FC<{ month: number; year: number }> = ({ month, y
                 Cell: ({ row, value }: any) => {
                     if (row.original.type === "category") {
                         return (
-                            <Button onClick={() => toggleCategory(value)}>{value}</Button>
+                            <span onClick={() => toggleCategory(value)}>{value}</span>
                         );
                     }
                     return value;
