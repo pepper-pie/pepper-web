@@ -30,7 +30,7 @@ class TransactionModel {
     static async fetchAccountSummaries(month: number, year: number): Promise<AccountSummary[]> {
         // Using the request function to make an API call
         return request<AccountSummary[]>({
-            url: "monthly-report",
+            url: "account-summary-report",
             params: { month, year, format: "json" }, // Explicitly setting format to JSON
         });
     }
