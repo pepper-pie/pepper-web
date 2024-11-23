@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Box, Typography } from "@mui/material";
 import ExcelTable from "../components/ExcelTable";
 import TransactionModel from "../models/transactions/transaction-model";
-import { formatMoney } from "./TransactionTable";
+import { formatMoney } from "../utils/string-utils";
 
 const ExpensePivotTable: React.FC<{ month: number; year: number }> = ({ month, year }) => {
     const { data, isLoading, error } = useQuery({

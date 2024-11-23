@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Column } from "react-table";
 import ExcelTable from "../components/ExcelTable";
 import TransactionModel from "../models/transactions/transaction-model";
-import { formatMoney } from "./TransactionTable";
+import { formatMoney } from "../utils/string-utils";
 import { Box } from "@mui/material";
 
 export interface ExpenseSummary {

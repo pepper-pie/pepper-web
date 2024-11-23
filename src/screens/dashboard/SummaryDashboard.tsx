@@ -78,17 +78,6 @@ const Filters = styled(Box)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const Content = styled(Box)(({ theme }) => ({
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.shape.borderRadius,
-    boxShadow: theme.shadows[3],
-    overflow: 'auto',
-    padding: theme.spacing(3),
-}));
-
 const SummaryDashboard: FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 

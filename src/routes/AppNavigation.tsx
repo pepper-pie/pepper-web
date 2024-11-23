@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import SummaryDashboard from '../screens/dashboard/SummaryDashboard'
-import { PageContainer } from '@toolpad/core'
+import PersonSplitwiseSummary from '../screens/splitwise/PersonSplitwiseSummary'
 
 export interface AppNavigationProps { }
 
@@ -10,7 +10,7 @@ const AppNavigation: FC<AppNavigationProps> = (props) => {
         <>
             <Routes>
                 <Route path="/" element={<SummaryDashboard />} />
-                <Route path="/splitwise" element={<div>Splitwise</div>} />
+                <Route path="/splitwise" element={<PersonSplitwiseSummary />} />
             </Routes>
         </>
     )

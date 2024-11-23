@@ -1,11 +1,11 @@
+import { Box } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import { Column } from "react-table";
 import ExcelTable from "../components/ExcelTable";
 import TransactionModel from "../models/transactions/transaction-model";
 import { Transaction } from "../models/transactions/transaction-types";
-import { Box } from "@mui/material";
+import { formatMoney } from "../utils/string-utils";
 
 interface TransactionsTableProps {
   month: number;
@@ -92,10 +92,3 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
 
 export default TransactionsTable;
 
-export const formatMoney = (value: number) => {
-  const formattedAmount = new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-  }).format(value || 0);
-  return formattedAmount
-}

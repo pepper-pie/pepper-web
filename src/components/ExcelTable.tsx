@@ -17,6 +17,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import FilterSortPopover from "./FilterPopover";
+import { IconButton } from "@mui/material";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 
 interface ExcelTableProps<T extends Record<string, any>> {
@@ -221,9 +223,15 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 												alignItems: "center",
 												justifyContent: "space-between",
 											}}
-											onClick={(e) => handleFilterClick(e, column.id)} // Open the popover
 										>
 											{column.render("Header")}
+											<IconButton
+												size="small"
+												color="inherit"
+												onClick={(e) => handleFilterClick(e, column.id)} // Open the popover
+											>
+												<ArrowDropDownIcon />
+											</IconButton>
 											<span
 												onDoubleClick={resizeAllColumns}
 												onMouseDown={(e) => handleMouseDown(colIndex, e)}
