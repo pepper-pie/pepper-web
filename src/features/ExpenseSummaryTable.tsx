@@ -26,7 +26,6 @@ const ExpenseSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
             {
                 Header: "Account Name",
                 accessor: "account_name",
-                width: 200,
             },
             {
                 Header: "Debit",
@@ -34,7 +33,6 @@ const ExpenseSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
                 Cell: ({ value }) => (
                     <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>
                 ),
-                width: 150,
             },
             {
                 Header: "Credit",
@@ -42,7 +40,6 @@ const ExpenseSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
                 Cell: ({ value }) => (
                     <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>
                 ),
-                width: 150,
             },
             {
                 Header: "Total",
@@ -50,7 +47,6 @@ const ExpenseSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
                 Cell: ({ value }) => (
                     <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>
                 ),
-                width: 150,
             },
         ],
         []
@@ -60,7 +56,7 @@ const ExpenseSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
     if (error) return <div>Error loading expense summary.</div>;
 
     return (
-        <Box mt={2} mb={2} >
+        <Box mr={2} >
             <ExcelTable columns={columns} data={data || []} />
         </Box>
     );

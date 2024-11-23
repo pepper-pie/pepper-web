@@ -72,7 +72,7 @@ const AccountSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error loading account summaries.</div>;
 
-    return <Box width={'70%'} mt={2} mr={2} >
+    return <Box>
         <ExcelTable columns={columns} data={data || []} />
     </Box>;
 };

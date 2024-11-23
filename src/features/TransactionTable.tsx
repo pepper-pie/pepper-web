@@ -36,7 +36,8 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
               year: "numeric",
             }).replace(/\//g, "-"); // Replace slashes with dashes
             return <div style={{ textAlign: "right" }}>{formattedDate}</div>;
-          }
+          },
+          width: 87
         },
         { Header: "Narration", accessor: "narration" },
         {
@@ -45,6 +46,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
           Cell: ({ value }) => {
             return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
           },
+          width: 100
         },
         {
           Header: "Credit Amount",
@@ -52,16 +54,18 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
           Cell: ({ value }) => {
             return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
           },
+          width: 100
         },
-        { Header: "Category", accessor: "category" },
-        { Header: "Sub Category", accessor: "sub_category" },
-        { Header: "Personal Account", accessor: "personal_account" },
-        { Header: "Nominal Account", accessor: "nominal_account" },
+        { Header: "Category", accessor: "category", width: 123 },
+        { Header: "Sub Category", accessor: "sub_category", width: 123 },
+        { Header: "Personal Account", accessor: "personal_account", width: 123 },
+        { Header: "Nominal Account", accessor: "nominal_account", width: 123 },
         {
           Header: "Running Balance", accessor: "running_balance",
           Cell: ({ value }) => {
             return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
           },
+          width: 123
         },
       ]
       return cols
@@ -75,16 +79,13 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
 
   return (
     <div>
-          <h1>Transactions</h1>
-      <ErrorBoundary fallback={<div>Something went wrong</div>} >
         <Box sx={{
-          height: "calc(100vh - 194px)", // Full page height
+        height: "calc(100vh - 250px)", // Full page height
           display: "flex",
           flexDirection: "column",
         }} >
         <ExcelTable columns={columns} data={transactions || []} />
-        </Box>
-      </ErrorBoundary>
+      </Box>
     </div>
   );
 };
