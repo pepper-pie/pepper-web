@@ -5,7 +5,7 @@ import ExcelTable from "../../components/ExcelTable";
 import { useSearchParams } from "react-router-dom";
 import { PageContainer, PageContainerToolbar } from "@toolpad/core";
 import { styled } from "@mui/material/styles";
-import { Box, Autocomplete, Button, TextField, Chip } from "@mui/material";
+import { Box, Autocomplete, Button, TextField, IconButton, Tooltip } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import SplitwiseModel from "../../models/transactions/splitwise-model";
 import dayjs from "dayjs";
@@ -13,6 +13,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { formatMoney, formattedDate } from "../../utils/string-utils";
 import { SplitwiseTransaction, Friend } from "../../models/transactions/splitwise-types";
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -67,7 +68,7 @@ const PersonSplitwiseSummary: React.FC = () => {
     });
 
     // Fetch transactions
-    const { data: transactions, isLoading: isTransactionsLoading, error: transactionsError } = useQuery({
+    const { data: transactions, isFetching: isTransactionsLoading, error: transactionsError, refetch } = useQuery({
         queryKey: ["splitwiseTransactions", person, start_date, end_date],
         queryFn: () =>
             SplitwiseModel.fetchTransactions({
@@ -75,7 +76,7 @@ const PersonSplitwiseSummary: React.FC = () => {
                 start_date,
                 end_date,
             }),
-        enabled: !!start_date && !!end_date, // Fetch only if dates are available
+        enabled: !!person && !!start_date && !!end_date, // Fetch only if dates are available
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     });
 
@@ -130,6 +131,11 @@ const PersonSplitwiseSummary: React.FC = () => {
                 toolbar: () => (
                     <PageContainerToolbar>
                         <Filters>
+                            <Tooltip title="Refresh" >
+                                <IconButton onClick={() => refetch()} disabled={isTransactionsLoading} >
+                                    <RefreshIcon />
+                                </IconButton>
+                            </Tooltip>
                             <Autocomplete
                                 sx={{ width: 250 }}
                                 options={friends}
@@ -192,8 +198,10 @@ const PersonSplitwiseSummary: React.FC = () => {
                 <div>Loading...</div>
             ) : transactionsError ? (
                 <div>Error loading transactions.</div>
-            ) : (
-                <ExcelTable columns={columns} data={transactions || []} />
+                ) : (
+                        <Box style={{ height: 'calc(100vh - 180px)' }} >
+                            <ExcelTable columns={columns} data={transactions || []} />
+                        </Box>
             )}
         </PageContainer>
     );
