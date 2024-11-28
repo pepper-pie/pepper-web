@@ -17,7 +17,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import FilterSortPopover from "./FilterPopover";
-import { IconButton } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 
@@ -272,7 +272,7 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 												whiteSpace: "nowrap",
 											}}
 										>
-											{cell.render("Cell")}
+											<Typography fontSize={13} >{cell.render("Cell")}</Typography>
 										</StyledTableCell>
 									))}
 								</TableRow>
@@ -337,7 +337,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	borderRight: "1px solid #D4D4D4", // Black border for all cells
 	padding: theme.spacing(0.5), // Reduced padding for denser cells
 	fontWeight: 500,
-	color: 'black',
 	fontSize: "13px", // Slightly smaller font size
 	whiteSpace: "nowrap", // Prevent text wrapping
 	overflow: "hidden", // Hide overflowed text

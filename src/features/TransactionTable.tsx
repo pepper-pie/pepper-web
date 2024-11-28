@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { Column } from "react-table";
@@ -6,6 +6,7 @@ import ExcelTable from "../components/ExcelTable";
 import TransactionModel from "../models/transactions/transaction-model";
 import { Transaction } from "../models/transactions/transaction-types";
 import { formatMoney } from "../utils/string-utils";
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 interface TransactionsTableProps {
   month: number;
@@ -14,7 +15,7 @@ interface TransactionsTableProps {
 
 const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) => {
   // Define the query directly in the component
-    const { data: transactions = [], isLoading, error } = useQuery({
+  const { data: transactions = [], isLoading, error, refetch } = useQuery({
         queryKey: ["transactions", month, year], // Unique query key
         queryFn: () => TransactionModel.fetchTransactions(month, year),
         enabled: !!month && !!year,
@@ -63,7 +64,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
         {
           Header: "Running Balance", accessor: "running_balance",
           Cell: ({ value }) => {
-            return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
+            return <span style={{ textAlign: "right" }}>{formatMoney(value)}</span>;
           },
           width: 123
         },
@@ -79,6 +80,11 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
 
   return (
     <div>
+      <Tooltip title="Refresh" >
+        <IconButton onClick={() => refetch()} disabled={isLoading} >
+          <RefreshIcon />
+        </IconButton>
+      </Tooltip>
         <Box sx={{
         height: "calc(100vh - 250px)", // Full page height
           display: "flex",

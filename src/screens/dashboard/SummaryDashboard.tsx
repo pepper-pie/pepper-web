@@ -1,15 +1,32 @@
-import React, { FC } from 'react';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { useSearchParams } from 'react-router-dom';
+import DownloadIcon from '@mui/icons-material/Download';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { LoadingButton } from '@mui/lab';
 import { Button, ButtonGroup } from '@mui/material';
-import AccountSummaryTable from '../../features/AccountSummaryTable';
-import ExpenseSummaryTable from '../../features/ExpenseSummaryTable';
-import ExpensePivotTable from '../../features/ExpensePivotTable';
-import TransactionsTable from '../../features/TransactionTable';
+import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { styled } from '@mui/material/styles';
+import { useQuery } from '@tanstack/react-query';
 import { PageContainer, PageContainerToolbar } from '@toolpad/core';
+import { FC } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import AccountSummaryTable from '../../features/AccountSummaryTable';
+import ExpensePivotTable from '../../features/ExpensePivotTable';
+import ExpenseSummaryTable from '../../features/ExpenseSummaryTable';
+import TransactionsTable from '../../features/TransactionTable';
+import TransactionModel from '../../models/transactions/transaction-model';
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 // preview-start
 function PageToolbar() {
@@ -25,8 +42,15 @@ function PageToolbar() {
     const defaultYear = currentDate.getFullYear();
 
 
-    const selectedMonth = parseInt(searchParams.get('month') || `${defaultMonth}`, 10);
-    const selectedYear = parseInt(searchParams.get('year') || `${defaultYear}`, 10);
+    var selectedMonth = parseInt(searchParams.get('month') || `${defaultMonth}`, 10);
+    var selectedYear = parseInt(searchParams.get('year') || `${defaultYear}`, 10);
+
+    const downloadReportQuery = useQuery(
+        {
+            queryKey: [selectedMonth, selectedYear],
+            queryFn: () => TransactionModel.downloadMonthlyReport(selectedMonth, selectedYear),
+            enabled: false
+        })
 
     // Handle filter changes
     const handleMonthChange = (event: SelectChangeEvent<number>) => {
@@ -37,11 +61,36 @@ function PageToolbar() {
         setSearchParams({ month: `${selectedMonth}`, year: `${event.target.value}`, tab: selectedTab });
     };
 
-    console.log({ selectedYear, selectedMonth })
+    const onUpload = (file?: File) => {
+        if (file) {
+            TransactionModel.uploadTransactions(file);
+        } else {
+            alert('Please select a file to upload.');
+        }
+    };
+
 
     return (
         <PageContainerToolbar>
             <Filters>
+                <Button
+                    component="label"
+                    role={undefined}
+                    tabIndex={-1}
+                    endIcon={<FileUploadIcon />}
+                >
+                    <VisuallyHiddenInput
+                        type="file"
+                        onChange={(event) => onUpload(event.target.files?.[0])}
+                        multiple
+                    />
+                    Upload Transaction
+                </Button>
+                <LoadingButton loading={downloadReportQuery.isLoading} variant='contained' endIcon={<DownloadIcon />}
+                    onClick={e => downloadReportQuery.refetch()}
+                >
+                    Monthly Report
+                </LoadingButton>
                 <Select
                     value={selectedMonth}
                     onChange={handleMonthChange}

@@ -4,6 +4,28 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import { Navigation, NotificationsProvider } from '@toolpad/core';
+import { AppProvider } from '@toolpad/core/react-router-dom';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import TimelineIcon from '@mui/icons-material/Timeline';
+
+const NAVIGATION: Navigation = [
+  {
+    kind: 'header',
+    title: 'Main items',
+  },
+  {
+    segment: '',
+    title: 'Dashboard',
+    icon: <DashboardIcon />,
+  },
+  {
+    pattern: 'splitwise',
+    segment: 'splitwise',
+    title: 'Splitwise',
+    icon: <TimelineIcon />,
+  },
+];
 
 
 const root = ReactDOM.createRoot(
@@ -12,7 +34,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <App />
+      <AppProvider
+        navigation={NAVIGATION}
+      >
+        <NotificationsProvider>
+          <App />
+        </NotificationsProvider>
+      </AppProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -31,21 +31,21 @@ const ExpenseSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
                 Header: "Debit",
                 accessor: "debit",
                 Cell: ({ value }) => (
-                    <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>
+                    <span style={{ textAlign: "right" }}>{formatMoney(value)}</span>
                 ),
             },
             {
                 Header: "Credit",
                 accessor: "credit",
                 Cell: ({ value }) => (
-                    <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>
+                    <span style={{ textAlign: "right" }}>{formatMoney(value)}</span>
                 ),
             },
             {
                 Header: "Total",
                 accessor: "total",
                 Cell: ({ value }) => (
-                    <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>
+                    <span style={{ textAlign: "right" }}>{formatMoney(value)}</span>
                 ),
             },
         ],

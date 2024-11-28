@@ -36,8 +36,8 @@ const AccountSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
             {
                 Header: "Opening Balance",
                 accessor: "opening_balance",
-                Cell: ({ value }) => {
-                    return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
+                Cell: ({ value, row }) => {
+                    return <span style={{ textAlign: "right", }}>{formatMoney(value)}</span>;
                 },
                 width: 100
             },
@@ -45,7 +45,7 @@ const AccountSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
                 Header: "Debit",
                 accessor: "debit",
                 Cell: ({ value }) => {
-                    return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
+                    return <span style={{ textAlign: "right" }}>{formatMoney(value)}</span>;
                 },
                 width: 100
             },
@@ -53,7 +53,7 @@ const AccountSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
                 Header: "Credit",
                 accessor: "credit",
                 Cell: ({ value }) => {
-                    return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
+                    return <span style={{ textAlign: "right" }}>{formatMoney(value)}</span>;
                 },
                 width: 100
             },
@@ -61,7 +61,7 @@ const AccountSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
                 Header: "Closing Balance",
                 accessor: "closing_balance",
                 Cell: ({ value }) => {
-                    return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
+                    return <span style={{ textAlign: "right" }}>{formatMoney(value)}</span>;
                 },
                 width: 100
             },

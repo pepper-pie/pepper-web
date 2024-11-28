@@ -1,6 +1,16 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-const axios = Axios.create({})
+const csrfToken = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("csrftoken="))
+    ?.split("=")[1];
+
+const axios = Axios.create({
+    headers: {
+        "X-CSRFToken": csrfToken || "",
+    },
+    withCredentials: true, // Ensures cookies are sent with requests
+})
 
 export const error401 = (error: AxiosError) => {
     if (error.response?.status === 401) {
