@@ -124,10 +124,7 @@ const Filters = styled(Box)(({ theme }) => ({
 }));
 
 const ReportLayout: FC = () => {
-    const [searchParams, _] = useSearchParams();
-
-
-    const BASE_URL = `/reports`;
+    const [searchParams,] = useSearchParams();
 
     // Get current month and year
     const currentDate = new Date();
@@ -143,27 +140,10 @@ const ReportLayout: FC = () => {
             slots={{ toolbar: PageToolbar }}
             style={{ maxWidth: 'unset' }}
         >
-            {/* <AccountSummaryTable month={selectedMonth} year={selectedYear} /> */}
             <Routes>
-                {/* <Route path={`/account-summary`} element={<AccountSummaryTable month={selectedMonth} year={selectedYear} />} />
-                <Route path={`/account-summary/`} element={<AccountSummaryTable month={selectedMonth} year={selectedYear} />} /> */}
                 <Route path={`account-summary`} element={<AccountSummaryTable month={selectedMonth} year={selectedYear} />} />
-                {/* <Route path={`reports/account-summary/*`} element={<AccountSummaryTable month={selectedMonth} year={selectedYear} />} />
-                <Route path={`/reports/account-summary/*`} element={<AccountSummaryTable month={selectedMonth} year={selectedYear} />} />
-                <Route path={`/reports/account-summary/`} element={<AccountSummaryTable month={selectedMonth} year={selectedYear} />} /> */}
-                <Route path={`transactions/*`} element={<TransactionsTable month={selectedMonth} year={selectedYear} />} />
+                <Route path={`transactions`} element={<TransactionsTable month={selectedMonth} year={selectedYear} />} />
             </Routes>
-            {/* <Route path="/" element={<Dashboard />} /> */}
-            {/* {selectedTab === 'reports' ? (
-                <Box>
-                    <Box display={'flex'} width={'100%'} mt={2} >
-                        <ExpenseSummaryTable month={selectedMonth} year={selectedYear} />
-                        <ExpensePivotTable month={selectedMonth} year={selectedYear} />
-                    </Box>
-                </Box>
-            ) : (
-                <TransactionsTable month={selectedMonth} year={selectedYear} />
-            )} */}
         </PageContainer>
     );
 };

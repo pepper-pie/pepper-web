@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Landing from '../screens/Landing'
 import PersonSplitwiseSummary from '../screens/splitwise/PersonSplitwiseSummary'
-import ReportLayout from './ReportingLayout'
+import ReportLayout from './ReportLayout'
 
 export interface AppNavigationProps { }
 
