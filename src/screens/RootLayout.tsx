@@ -5,7 +5,7 @@ export default function RootLayout() {
   return (
     <DashboardLayout
       title="My App"
-      defaultSidebarCollapsed
+      // defaultSidebarCollapsed
       sidebarExpandedWidth={180}
     >
       <AppNavigation />

@@ -14,6 +14,7 @@ interface TransactionsTableProps {
 }
 
 const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) => {
+
   // Define the query directly in the component
   const { data: transactions = [], isLoading, error, refetch } = useQuery({
         queryKey: ["transactions", month, year], // Unique query key
@@ -26,6 +27,15 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
   const columns:Column<Transaction>[] = React.useMemo(
     () => {
       const cols: Column<Transaction>[] = [
+        {
+          Header: "ID",
+          accessor: "id",
+          Cell: ({ value }, index) => {
+            console.log({ index })
+            return <div style={{ textAlign: "right" }}>{value}</div>;
+          },
+          width: 64
+        },
         {
           Header: "Date",
           accessor: "date",
@@ -77,6 +87,8 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
   if (isLoading) return <p>Loading transactions...</p>;
   if (error)
     return <p>Error fetching transactions: {(error as Error).message}</p>;
+
+  console.log('Hello')
 
   return (
     <div>

@@ -3,9 +3,19 @@ import { CategorisedExpenseSummary } from "../../features/ExpensePivotTable";
 import { ExpenseSummary } from "../../features/ExpenseSummaryTable";
 import { request } from "../../utils/axios-utils";
 import { downloadFile } from "../../utils/file-utils";
-import { Transaction } from "./transaction-types";
+import { PersonalAccount, Transaction } from "./transaction-types";
 
 class TransactionModel {
+
+
+    static async fetchPersonalAccounts(): Promise<PersonalAccount[]> {
+        // Use the request function for API call
+        return request<PersonalAccount[]>({
+            url: "personal-accounts/"
+        });
+    }
+
+
     /**
      * Fetch transactions for a given month and year.
      * 
@@ -97,7 +107,7 @@ class TransactionModel {
                     alert(`Success: ${jsonResponse.message || 'File uploaded successfully!'}`);
                 };
                 reader.readAsText(response.data as Blob);
-            } else if (contentType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+            } else if (contentType.includes('application/octet-stream')) {
                 // Handle Excel response
                 downloadFile(response.data as Blob, 'response.xlsx');
             } else {
@@ -106,14 +116,18 @@ class TransactionModel {
         } catch (error: any) {
             console.error('Error uploading file:', error);
 
+            // Check if error response contains a file
+            const contentType = error.response.headers['content-type'];
+
+            if (contentType.includes('application/json')) {
+                alert(String(error.response?.data));
+                return
+            }
+
             if (error.response?.data instanceof Blob) {
-                // Check if error response contains a file
-                const contentType = error.response.headers['content-type'];
 
                 if (contentType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
                     downloadFile(error.response.data, 'error_response.xlsx');
-                } else {
-                    alert('Unexpected file type in error response.');
                 }
             } else {
                 // Fallback for non-file error responses

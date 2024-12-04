@@ -11,12 +11,25 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 
 const NAVIGATION: Navigation = [
   {
-    kind: 'header',
-    title: 'Main items',
+    segment: '',
+    title: 'Home',
   },
   {
-    segment: '',
-    title: 'Dashboard',
+    segment: '/reports',
+    pattern: '/reports',
+    title: 'Dashboard ',
+    children: [
+      {
+        pattern: 'account-summary',
+        segment: 'reports/account-summary',
+        title: "Account Summary",
+      },
+      {
+        pattern: 'transactions',
+        segment: 'reports/transactions',
+        title: "Transactions"
+      }
+    ],
     icon: <DashboardIcon />,
   },
   {
