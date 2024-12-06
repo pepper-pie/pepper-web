@@ -7,12 +7,12 @@ import { PageContainer, PageContainerToolbar } from "@toolpad/core";
 import { styled } from "@mui/material/styles";
 import { Box, Autocomplete, Button, TextField, IconButton, Tooltip } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import SplitwiseModel from "../../models/transactions/splitwise-model";
+import SplitwiseModel from "../../models/splitwise/splitwise-model";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { formatMoney, formattedDate } from "../../utils/string-utils";
-import { SplitwiseTransaction, Friend } from "../../models/transactions/splitwise-types";
+import { SplitwiseTransaction, Friend } from "../../models/splitwise/splitwise-types";
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 dayjs.extend(utc);

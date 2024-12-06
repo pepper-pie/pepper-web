@@ -1,18 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from 'react-router-dom';
+import CreditCard from '@mui/icons-material/CreditCard';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import Home from '@mui/icons-material/Home';
+import TimelineIcon from '@mui/icons-material/Timeline';
 import { Navigation, NotificationsProvider } from '@toolpad/core';
 import { AppProvider } from '@toolpad/core/react-router-dom';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import TimelineIcon from '@mui/icons-material/Timeline';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
 
 const NAVIGATION: Navigation = [
   {
     segment: '',
     title: 'Home',
+    icon: <Home />,
   },
   {
     segment: '/reports',
@@ -22,7 +25,7 @@ const NAVIGATION: Navigation = [
       {
         pattern: 'account-summary',
         segment: 'reports/account-summary',
-        title: "Account Summary",
+        title: "Account Summary"
       },
       {
         pattern: 'transactions',
@@ -31,6 +34,12 @@ const NAVIGATION: Navigation = [
       }
     ],
     icon: <DashboardIcon />,
+  },
+  {
+    pattern: "creditcard",
+    segment: 'creditcard',
+    title: 'Credit Card',
+    icon: <CreditCard />
   },
   {
     pattern: 'splitwise',

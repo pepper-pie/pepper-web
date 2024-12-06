@@ -23,66 +23,6 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
         staleTime: 5 * 60 * 1000
   });
 
-  // Table column definition
-  const columns:Column<Transaction>[] = React.useMemo(
-    () => {
-      const cols: Column<Transaction>[] = [
-        {
-          Header: "ID",
-          accessor: "id",
-          Cell: ({ value }, index) => {
-            console.log({ index })
-            return <div style={{ textAlign: "right" }}>{value}</div>;
-          },
-          width: 64
-        },
-        {
-          Header: "Date",
-          accessor: "date",
-          Cell: ({ value }) => {
-            // Format date
-            const formattedDate = new Date(value).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            }).replace(/\//g, "-"); // Replace slashes with dashes
-            return <div style={{ textAlign: "right" }}>{formattedDate}</div>;
-          },
-          width: 87
-        },
-        { Header: "Narration", accessor: "narration" },
-        {
-          Header: "Debit Amount",
-          accessor: "debit_amount", // Replace with the correct field name
-          Cell: ({ value }) => {
-            return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
-          },
-          width: 100
-        },
-        {
-          Header: "Credit Amount",
-          accessor: "credit_amount", // Replace with the correct field name
-          Cell: ({ value }) => {
-            return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
-          },
-          width: 100
-        },
-        { Header: "Category", accessor: "category", width: 123 },
-        { Header: "Sub Category", accessor: "sub_category", width: 123 },
-        { Header: "Personal Account", accessor: "personal_account", width: 123 },
-        { Header: "Nominal Account", accessor: "nominal_account", width: 123 },
-        {
-          Header: "Running Balance", accessor: "running_balance",
-          Cell: ({ value }) => {
-            return <span style={{ textAlign: "right" }}>{formatMoney(value)}</span>;
-          },
-          width: 123
-        },
-      ]
-      return cols
-    },
-    []
-  );
 
   if (isLoading) return <p>Loading transactions...</p>;
   if (error)
@@ -97,12 +37,12 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
           <RefreshIcon />
         </IconButton>
       </Tooltip>
-        <Box sx={{
+      <Box sx={{
         height: "calc(100vh - 250px)", // Full page height
-          display: "flex",
-          flexDirection: "column",
-        }} >
-        <ExcelTable columns={columns} data={transactions || []} />
+        display: "flex",
+        flexDirection: "column",
+      }} >
+        <ExcelTable columns={getTransactionColumns()} data={transactions || []} />
       </Box>
     </div>
   );
@@ -110,3 +50,61 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ month, year }) =>
 
 export default TransactionsTable;
 
+
+
+export const getTransactionColumns = (): Column<Transaction>[] => {
+  const cols: Column<Transaction>[] = [
+    {
+      Header: "ID",
+      accessor: "id",
+      Cell: ({ value }, index) => {
+        console.log({ index })
+        return <div style={{ textAlign: "right" }}>{value}</div>;
+      },
+      width: 64
+    },
+    {
+      Header: "Date",
+      accessor: "date",
+      Cell: ({ value }) => {
+        // Format date
+        const formattedDate = new Date(value).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        }).replace(/\//g, "-"); // Replace slashes with dashes
+        return <div style={{ textAlign: "right" }}>{formattedDate}</div>;
+      },
+      width: 87
+    },
+    { Header: "Narration", accessor: "narration" },
+    {
+      Header: "Debit Amount",
+      accessor: "debit_amount", // Replace with the correct field name
+      Cell: ({ value }) => {
+        return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
+      },
+      width: 100
+    },
+    {
+      Header: "Credit Amount",
+      accessor: "credit_amount", // Replace with the correct field name
+      Cell: ({ value }) => {
+        return <div style={{ textAlign: "right" }}>{formatMoney(value)}</div>;
+      },
+      width: 100
+    },
+    { Header: "Category", accessor: "category", width: 123 },
+    { Header: "Sub Category", accessor: "sub_category", width: 123 },
+    { Header: "Personal Account", accessor: "personal_account", width: 123 },
+    { Header: "Nominal Account", accessor: "nominal_account", width: 123 },
+    {
+      Header: "Running Balance", accessor: "running_balance",
+      Cell: ({ value }) => {
+        return <span style={{ textAlign: "right" }}>{formatMoney(value)}</span>;
+      },
+      width: 123
+    },
+  ]
+  return cols
+}
