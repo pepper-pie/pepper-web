@@ -1,10 +1,11 @@
-import React, { useMemo } from "react";
+import { Box } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { Column } from "react-table";
+import dayjs from "dayjs";
+import React, { useMemo } from "react";
+import { Column, RowPropGetter } from "react-table";
 import ExcelTable from "../components/ExcelTable";
 import TransactionModel from "../models/transactions/transaction-model";
 import { formatMoney } from "../utils/string-utils";
-import { Box } from "@mui/material";
 
 export interface AccountSummary {
     account_name: string;
@@ -12,6 +13,7 @@ export interface AccountSummary {
     debit: number;
     credit: number;
     closing_balance: number;
+    freezing_date: string // date
 }
 
 const AccountSummaryTable: React.FC<{ month: number; year: number }> = ({ month, year }) => {
@@ -25,13 +27,30 @@ const AccountSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
         }
     );
 
+    const getRowProps: RowPropGetter<AccountSummary> = (row) => {
+        return {
+            style: {
+                backgroundColor: true ? '#74C476' : 'transparent',
+            },
+        };
+    };
+
+    const isFreezed = (data: AccountSummary) => {
+        let date = data.freezing_date;
+        return Boolean(month === dayjs(date).month() + 1 && dayjs(date).isSame(dayjs(date).endOf('month'), 'date'))
+    }
+
     // Define columns for the table
     const columns: Column<AccountSummary>[] = useMemo(
         () => [
             {
                 Header: "Account Name",
                 accessor: "account_name", // Key from API response
-                width: 120
+                width: 120,
+                Cell: ({ value, row }) => {
+                    row.getRowProps(getRowProps)
+                    return <span style={{}}>{value}</span>;
+                },
             },
             {
                 Header: "Opening Balance",
@@ -73,7 +92,7 @@ const AccountSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
     if (error) return <div>Error loading account summaries.</div>;
 
     return <Box>
-        <ExcelTable columns={columns} data={data || []} />
+        <ExcelTable isRowHighlighted={isFreezed} highlightColor="#74C476" columns={columns} data={data || []} />
     </Box>;
 };
 

@@ -6,7 +6,8 @@ import {
 	useResizeColumns,
 	Column,
 	TableInstance,
-	FilterType
+	FilterType,
+	UseTableRowProps
 } from "react-table";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -24,9 +25,12 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 interface ExcelTableProps<T extends Record<string, any>> {
 	columns: Column<T>[]; // Columns definition
 	data: T[]; // Data to render
+	getRowProps?: UseTableRowProps<Object>['getRowProps']
+	isRowHighlighted?: (data: T) => boolean;
+	highlightColor?: string;
 }
 
-function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTableProps<T>) {
+function ExcelTable<T extends Record<string, any>>({ columns, data, highlightColor, isRowHighlighted }: ExcelTableProps<T>) {
 
 	const resizingLineRef = useRef<HTMLDivElement | null>(null); // Resizing guide
 	const resizingColIndexRef = useRef<number | null>(null); // Track resizing column
@@ -55,7 +59,6 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 		if (column) {
 			const filterValue = filters[columnId].length > 0 ? filters[columnId] : undefined; // Apply filter or clear it
 			tableInstance.setFilter(columnId, filterValue); // Use React Table's `setFilter` method
-			console.log(`Filter applied on column ${columnId}:`, filters);
 		}
 	};
 
@@ -63,7 +66,6 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 		const column = tableInstance.columns.find((col) => col.id === columnId);
 		if (column) {
 			tableInstance.toggleSortBy(columnId, order === "desc"); // Use React Table's `toggleSortBy` method
-			console.log(`Sorting applied on column ${columnId}: ${order}`);
 		}
 	};
 
@@ -113,7 +115,6 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 	}
 
 	const handleMouseUp = (event: MouseEvent) => {
-		console.log('Entered', resizingColIndexRef.current)
 		if (resizingColIndexRef.current === null) return;
 
 		const deltaX = event.clientX - startXRef.current;
@@ -192,7 +193,6 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 		prepareRow,
 	} = tableInstance;
 
-
 	return (
 		<>
 			<StyledTableContainer component={Paper}>
@@ -261,7 +261,13 @@ function ExcelTable<T extends Record<string, any>>({ columns, data }: ExcelTable
 						{rows.map((row, i) => {
 							prepareRow(row);
 							return (
-								<TableRow {...row.getRowProps()} key={i} >
+								<TableRow {
+									...row.getRowProps(r =>
+									({
+										style:
+											{ backgroundColor: isRowHighlighted?.(row.original) ? highlightColor : 'transparent' }
+									}))
+								} key={i} >
 									{row.cells.map((cell, i) => (
 										<StyledTableCell
 											{...cell.getCellProps()}
