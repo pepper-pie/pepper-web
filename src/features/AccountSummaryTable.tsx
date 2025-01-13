@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
-import { Column, RowPropGetter } from "react-table";
+import { Column } from "react-table";
 import ExcelTable from "../components/ExcelTable";
 import TransactionModel from "../models/transactions/transaction-model";
 import { formatMoney } from "../utils/string-utils";
