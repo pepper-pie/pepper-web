@@ -27,17 +27,9 @@ const AccountSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
         }
     );
 
-    const getRowProps: RowPropGetter<AccountSummary> = (row) => {
-        return {
-            style: {
-                backgroundColor: true ? '#74C476' : 'transparent',
-            },
-        };
-    };
-
     const isFreezed = (data: AccountSummary) => {
-        let date = data.freezing_date;
-        return Boolean(month === dayjs(date).month() + 1 && dayjs(date).isSame(dayjs(date).endOf('month'), 'date'))
+        let end_of_month = dayjs(new Date(year, month - 1, 1)).endOf('month').format('YYYY-MM-DD')
+        return data.freezing_date >= end_of_month
     }
 
     // Define columns for the table
@@ -48,7 +40,6 @@ const AccountSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
                 accessor: "account_name", // Key from API response
                 width: 120,
                 Cell: ({ value, row }) => {
-                    row.getRowProps(getRowProps)
                     return <span style={{}}>{value}</span>;
                 },
             },
