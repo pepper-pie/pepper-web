@@ -29,7 +29,7 @@ const AccountSummaryTable: React.FC<{ month: number; year: number }> = ({ month,
 
     const isFreezed = (data: AccountSummary) => {
         let end_of_month = dayjs(new Date(year, month - 1, 1)).endOf('month').format('YYYY-MM-DD')
-        return data.freezing_date >= end_of_month
+        return data.freezing_date >= dayjs(new Date()).format('YYYY-MM-DD') || data.freezing_date >= end_of_month 
     }
 
     // Define columns for the table
