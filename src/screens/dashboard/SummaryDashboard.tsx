@@ -13,9 +13,10 @@ const SummaryDashboard: FC<{ month: number, year: number }> = ({ month, year }) 
     // Extract filters from URL or use defaults
     const selectedTab = searchParams.get('tab') || 'reports';
 
-
     const handleTabChange = (tab: string) => {
-        setSearchParams({ ...searchParams, tab });
+        let allParams: Record<string, string> = {};
+        searchParams.forEach((v, k) => { allParams[k] = v })
+        setSearchParams({ ...allParams, tab });
     };
 
     return (

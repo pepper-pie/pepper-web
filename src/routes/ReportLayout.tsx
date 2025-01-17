@@ -31,6 +31,9 @@ function PageToolbar() {
 
     const [searchParams, setSearchParams] = useSearchParams();
 
+    let allParams: Record<string, string> = {};
+    searchParams.forEach((v, k) => { allParams[k] = v })
+
 
     // Get current month and year
     const currentDate = new Date();
@@ -50,11 +53,11 @@ function PageToolbar() {
 
     // Handle filter changes
     const handleMonthChange = (event: SelectChangeEvent<number>) => {
-        setSearchParams({ month: `${event.target.value}`, year: `${selectedYear}` });
+        setSearchParams({ ...allParams, month: `${event.target.value}` });
     };
 
     const handleYearChange = (event: SelectChangeEvent<number>) => {
-        setSearchParams({ month: `${selectedMonth}`, year: `${event.target.value}` });
+        setSearchParams({ ...allParams, year: `${event.target.value}` });
     };
 
     const onUpload = (file?: File) => {
