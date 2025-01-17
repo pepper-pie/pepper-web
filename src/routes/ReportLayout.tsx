@@ -10,9 +10,9 @@ import { useQuery } from '@tanstack/react-query';
 import { PageContainer, PageContainerToolbar } from '@toolpad/core';
 import { FC } from 'react';
 import { Route, Routes, useSearchParams } from 'react-router-dom';
-import AccountSummaryTable from '../features/AccountSummaryTable';
 import TransactionsTable from '../features/TransactionTable';
 import TransactionModel from '../models/transactions/transaction-model';
+import SummaryDashboard from '../screens/dashboard/SummaryDashboard';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -141,7 +141,7 @@ const ReportLayout: FC = () => {
             style={{ maxWidth: 'unset' }}
         >
             <Routes>
-                <Route path={`account-summary`} element={<AccountSummaryTable month={selectedMonth} year={selectedYear} />} />
+                <Route path={`account-summary`} element={<SummaryDashboard month={selectedMonth} year={selectedYear} />} />
                 <Route path={`transactions`} element={<TransactionsTable month={selectedMonth} year={selectedYear} />} />
             </Routes>
         </PageContainer>

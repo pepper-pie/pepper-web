@@ -1,9 +1,12 @@
 import React, { useMemo, useState } from "react";
+import AddIcon from '@mui/icons-material/Add';
 import { useQuery } from "@tanstack/react-query";
-import { Box, Typography } from "@mui/material";
+import { Box, styled, Typography } from "@mui/material";
 import ExcelTable from "../components/ExcelTable";
 import TransactionModel from "../models/transactions/transaction-model";
 import { formatMoney } from "../utils/string-utils";
+import { Column } from "react-table";
+import { round } from "lodash";
 
 const ExpensePivotTable: React.FC<{ month: number; year: number }> = ({ month, year }) => {
     const { data, isLoading, error } = useQuery({
@@ -56,29 +59,55 @@ const ExpensePivotTable: React.FC<{ month: number; year: number }> = ({ month, y
         return rows;
     };
 
-    const columns = useMemo(
+    const columns: Column<{ type: string; category: string; debit: number; credit: number }>[] = useMemo(
         () => [
             {
                 Header: "Category",
                 accessor: "category",
-                Cell: ({ row, value }: any) => {
+                Cell: ({ row, value }) => {
                     if (row.original.type === "category") {
                         return (
-                            <span onClick={() => toggleCategory(value)}>{value}</span>
+                            <div
+                                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                onClick={() => toggleCategory(value)}
+                            >
+                                <AddIcon style={{ marginRight: 4 }} fontSize="small" />
+                                {value}
+                            </div>
                         );
                     }
-                    return value;
+                    else if (row.original.type === "total") {
+                        return (
+                            <TotalRowCell>{value}</TotalRowCell>
+                        )
+                    }
+                    return <span style={{ marginLeft: 30 }} >{value}</span>;
                 },
             },
             {
                 Header: "Sum of Credit Amount",
                 accessor: "credit",
-                Cell: ({ value }: any) => formatMoney(value),
+                Cell: ({ value, row }) => {
+                    if (row.original.type === "total") return <TotalRowCell>{formatMoney(value)}</TotalRowCell>
+                    return <span>{formatMoney(value)}</span>
+                },
             },
             {
                 Header: "Sum of Debit Amount",
                 accessor: "debit",
-                Cell: ({ value }: any) => formatMoney(value),
+                Cell: ({ value, row }) => {
+                    if (row.original.type === "total") return <TotalRowCell>{formatMoney(value)}</TotalRowCell>
+                    return <span>{formatMoney(value)}</span>
+                },
+            },
+            {
+                Header: "Totals",
+                accessor: "type",
+                Cell: ({ row }) => {
+                    const value = round(row.original.debit - row.original.credit, 2);
+                    if (row.original.type === "total") return <TotalRowCell>{formatMoney(value)}</TotalRowCell>
+                    return <span>{formatMoney(value)}</span>
+                },
             },
         ],
         []
@@ -89,7 +118,7 @@ const ExpensePivotTable: React.FC<{ month: number; year: number }> = ({ month, y
 
     return (
         <Box>
-            <ExcelTable columns={columns} data={renderRows()} />
+            <ExcelTable isRowHighlighted={d => d.type === 'total'} highlightColor={'#d9edf7'} columns={columns} data={renderRows()} />
         </Box>
     );
 };
@@ -116,3 +145,8 @@ export interface CategorisedExpenseSummary {
         credit: number; // Grand total of credit
     };
 }
+
+const TotalRowCell = styled('span')({
+    fontWeight: 700,
+    fontSize: 14
+})
