@@ -115,6 +115,7 @@ const ExpensePivotTable: React.FC<{ month: number; year: number }> = ({ month, y
                 },
             },
         ],
+        // eslint-disable-next-line
         [expandedCategories.length]
     );
 
